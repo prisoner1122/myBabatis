@@ -1,5 +1,6 @@
 package cn.bugstack.mybatis.binding;
 
+import cn.bugstack.mybatis.session.Configuration;
 import cn.bugstack.mybatis.session.SqlSession;
 import cn.hutool.core.lang.ClassScanner;
 
@@ -12,8 +13,21 @@ import java.util.Set;
  * @create 2024-10-15 17:19
  */
 public class MapperRegistry {
+
+    private Configuration config;
+
+    public MapperRegistry(Configuration config) {
+        this.config = config;
+    }
+
+    /**
+     * 将已添加的映射器代理加入到 HashMap
+     */
     private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
+    /**
+     * 获取映射器代理
+     */
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
         final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
         if (mapperProxyFactory == null) {
